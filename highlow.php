@@ -6,62 +6,54 @@
 
 do {
 
+	$max = 100;
+	$min = 1;
 	$guess = 0;
 	$youWon = false;
 	$playAgain = 'n';
 	$numGuesses = 0;
 	$inputOK = false;
 
-$message = <<<OPENING
-Welcome to HI-LO. To play, start by picking the high 
-and low numbers of your guessing range.
-Then we'll generate a random number for you to guess.
-See if you can guess it with less than the max number
-of guesses we'll calculate for you.
 
-To quit type q or Q.	
-Good luck...
+	//verify the arguments are passed and numeric
+	//
+	$arg1 = (isset($argv[1])) && is_numeric($argv[1]) ? (int)$argv[1] : null;
+	$arg2 = (isset($argv[2])) && is_numeric($argv[2]) ? (int)$argv[2] : null;
+	$argArray = [$arg1,$arg2];
 
-OPENING;
 
-	fwrite(STDOUT, $message);
+	// if parameters are ok figure out which
+	// is max and which is min
+	if (!is_null($arg1) && !is_null($arg2)) {
+		$max = max($argArray);
+		$min = min($argArray);
 
-	//get max number
-	do {
-		fwrite(STDOUT,"Key in the highest number to guess: ");
-		$max = fgets(STDIN);
-		if ($max == PHP_EOL){
-			$max = 100;
-			fwrite(STDOUT,"Your max will be 100".PHP_EOL);
-		} elseif (!is_numeric(trim($max))) {
-			fwrite(STDOUT,"You need to enter a number for a maximum".PHP_EOL);
-		} else
-			$max = trim($max);
-			$inputOK = true;
-	} while ($inputOK == false);
-
-	//resets check input boolean
-	$inputOK = false;
-
-	//get min number
-
-	do {
-		fwrite(STDOUT,"Key in the highest number to guess: ");
-		$min = fgets(STDIN);
-		if ($min == PHP_EOL){
-			$min = 1;
-			fwrite(STDOUT,"Your min will be 1".PHP_EOL);
-		} elseif (!is_numeric(trim($min))) {
-			fwrite(STDOUT,"You need to enter a number for the minimum".PHP_EOL);
-		} else
-			$min = trim($min);
-			$inputOK = true;
-	} while ($inputOK == false);
+	// if at least one parameter was missed
+	// then set the other one based on finding
+	// the furthest value	
+	} elseif (!(is_null($arg1) && is_null($arg2))){
+		$arg1 = max($argArray);
+		(abs($max - $arg1) > abs($min - $arg1)) ? $min = $arg1 : $max = $arg1;
+		}
 
 	//set gaming variables
 	$rando = mt_rand($min,$max);
 	$maxGuesses = intval(($max - $min)/5);
-	fwrite(STDOUT,"You will have $maxGuesses guesses to guess the number.".PHP_EOL);
+
+
+//welcome message
+$message = <<<OPENING
+Welcome to HI-LO. Guess the randomly chosen
+number between $min and $max in less than $maxGuesses.
+
+To quit type q or Q.
+
+Good luck...
+
+OPENING;
+
+fwrite(STDOUT, $message);
+
 
 	//play the game
 	do {
@@ -82,7 +74,7 @@ OPENING;
 			fwrite(STDOUT,"You now have $guessesLeft guesses left.".PHP_EOL);
 			continue;
 
-	//guess is out of bounds	
+		//guess is out of bounds	
 		} elseif ($guess < $min || $guess > $max) {
 				fwrite(STDOUT,"Enter a number between $min and $max inclusive".PHP_EOL);
 				$numGuesses += 1;
