@@ -68,7 +68,7 @@ OPENING;
 		fwrite(STDOUT,'Your guess: ');
 		$guess = trim(fgets(STDIN));
 
-		//check for bad input...
+	//check for bad input...
 
 		//check for exiting game
 		if (strtolower($guess[0]) == "q"){
@@ -82,7 +82,7 @@ OPENING;
 			fwrite(STDOUT,"You now have $guessesLeft guesses left.".PHP_EOL);
 			continue;
 
-		//guess is out of bounds	
+	//guess is out of bounds	
 		} elseif ($guess < $min || $guess > $max) {
 				fwrite(STDOUT,"Enter a number between $min and $max inclusive".PHP_EOL);
 				$numGuesses += 1;
@@ -90,10 +90,10 @@ OPENING;
 				fwrite(STDOUT,"You now have $guessesLeft guesses left.".PHP_EOL);
 				continue;
 
-		// process the acceptable input
-		
-		//guess is too high
+	// process acceptable input
 		} else {
+			
+			//guess is too high
 			if ($guess > $rando){
 				fwrite(STDOUT,"The guess is too high".PHP_EOL);
 				$numGuesses += 1;
